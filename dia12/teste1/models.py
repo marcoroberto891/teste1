@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 class Pessoa(models.Model):
     nome = models.CharField(max_length=128)
     email = models.CharField(max_length=150)
-    usuario = models.CharField(User)
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
-        return self.nome
+        return self.usuario
 
 
 class PessoaFisica(Pessoa):
@@ -39,6 +39,7 @@ class Evento(models.Model):
     descricao = models.TextField()
     sigla = models.CharField(max_length=10)
     numero = models.IntegerField(max_length=10)
+    realizador = models.ManyToOneRel(PessoaFisica, on_delete=models.CASCADE,field_name=PessoaFisica, to=nome)
     logo = models.CharField(max_length=10)
     data_de_inicio = models.DateField(max_length=10)
     data_de_fim = models.DateField(max_length=10)
@@ -57,4 +58,4 @@ class EventoCientifico(Evento):
 class ArtigoCientifico(models.Model):
     titulo = models.CharField(max_length=150)
     autores = models.CharField(max_length=250)
-    evento = models.ForeignKey(EventoCientifico, related_name='eventoCientico', null=True, blank=False)
+    evento = models.ManyToOneRel(EventoCientifico, on_delete=models.CASCADE, field_name=EventoCientifico, to=Evento.nome)
